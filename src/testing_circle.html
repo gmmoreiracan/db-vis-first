@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        /* HTML: <div class="arc"></div> */
+        .arc {
+            position: absolute;
+            width: 250px;
+            aspect-ratio: 1;
+            padding: 30px; /* the boder thickness */
+            box-sizing: border-box;
+            border-color: #000;
+            border-radius: 50%;
+            background: #c0d860;
+            mask: linear-gradient(#0000 0 0) content-box intersect, conic-gradient(#000 60deg,#0000 0);
+        }
+    </style>
+    <title>Untitled-1</title>
+</head>
+<body>
+    <div class="arc"></div>
+    <div class="arc" style="rotate:60deg;background-color: aqua;"></div>
+    <div class="arc" style="rotate:120deg"></div>
+    <div class="arc" style="rotate:180deg;background-color: aqua;"></div>
+    <div class="arc" style="rotate:240deg"></div>
+    <div class="arc" style="rotate:300deg;background-color: aqua;"></div>
+</body>
+</html>

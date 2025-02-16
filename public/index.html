@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Database Disk Manager</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Database List Page -->
+    <div id="database-page" class="active-page page">
+        <h1>Databases</h1>
+        <button id="create-db-btn">Create Database</button>
+        <div id="database-list"></div>
+    </div>
+
+    <!-- Table List Page -->
+    <div id="table-page" class="page">
+        <h1>Tables in <span id="current-db"></span></h1>
+        <button id="create-table-btn">Create Table</button>
+        <div id="table-list"></div>
+        <button id="back-to-db">Back</button>
+    </div>
+
+    <!-- Table Details Page -->
+    <div id="table-details-page" class="page">
+        <h1>Table: <span id="current-table"></span></h1>
+        <div class="split-view">
+            <div>
+                <h2>Records</h2>
+                <div id="record-list"></div>
+                <button id="add-record-btn">Add Record</button>
+            </div>
+            <div>
+                <h2>Indexes</h2>
+                <div id="index-list"></div>
+            </div>
+            <div>
+                <h2>Disk Visualization</h2>
+                <div id="disk-visual" class="disk-visual"></div>
+            </div>
+            <div>
+                <h2>B+ Tree</h2>
+                <div id="btree-visual"></div>
+            </div>
+        </div>
+        <button id="back-to-tables">Back</button>
+    </div>
+
+    <script src="../src/app.js" type="module"></script>
+</body>
+</html>
