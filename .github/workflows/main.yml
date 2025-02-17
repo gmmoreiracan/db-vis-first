@@ -25,6 +25,17 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ca-central-1  # Change the region to your desired AWS region
 
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+  
+      - name: Install dependencies
+        run: npm install
+
+      - name: Install AWS CDK
+        run: npm install -g aws-cdk
+
       # Step 3: Deploy CDK Stack (to extract the outputs)
       - name: Deploy CDK Stack
         run: |
