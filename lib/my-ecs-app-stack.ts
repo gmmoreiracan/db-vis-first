@@ -32,7 +32,7 @@ export class MyEcsAppStack extends cdk.Stack {
 
         // Create a Docker Image Asset
         const asset = new ecr_assets.DockerImageAsset(this, 'MyNodeAppImage', {
-            directory: path.join(__dirname, '../app')
+            directory: path.join(__dirname, '/app')
         });
 
         // Define a Fargate Task Definition
