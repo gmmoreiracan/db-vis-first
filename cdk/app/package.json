@@ -1,11 +1,10 @@
 {
   "name": "db-vis-first",
   "version": "1.0.0",
-  "main": "index.js",
-  "source":"public",
   "scripts": {
-    "start": "parcel public/index.html",
-    "build": "parcel build public/index.html"
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
   },
   "keywords": [],
   "author": "",
@@ -19,6 +18,10 @@
     "vis-util": "^5.0.7"
   },
   "devDependencies": {
-    "parcel-bundler": "^1.12.5"
+    "parcel-bundler": "^1.12.5",
+    "vite": "^6.1.0"
+  },
+  "optionalDependencies": {
+    "fsevents": "^2.3.3"
   }
 }
