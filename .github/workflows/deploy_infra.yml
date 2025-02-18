@@ -3,8 +3,8 @@ name: Deploy CDK App
 on:
   push:
     paths:
-      - '/lib/**'   # Trigger this workflow when changes are made to files in the `lib` directory.
-      - '/bin/**'   # Trigger this workflow when changes are made to files in the `bin` directory.
+      - 'lib/**'   # Trigger this workflow when changes are made to files in the `lib` directory.
+      - 'bin/**'   # Trigger this workflow when changes are made to files in the `bin` directory.
       - '.github/workflows/deploy_infra.yml'  # Optional: trigger on workflow changes as well.
   workflow_dispatch:  # This allows you to trigger the action manually from GitHub UI.
 

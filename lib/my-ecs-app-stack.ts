@@ -82,7 +82,7 @@ export class MyEcsAppStack extends cdk.Stack {
             description: 'ECS Task Definition ARN',
         });
         //new cdk.CfnOutput(this, 'EcrRepoUri', { value: repository.repositoryUri, description: 'ECR Repository URI' });
-        new cdk.CfnOutput(this, 'EcrRepoUri', { value: asset.imageUri, description: 'ECR Repository URI' });
+        new cdk.CfnOutput(this, 'EcrRepoUri', { value: asset.repository.registryUri, description: 'ECR Repository URI' });
         new cdk.CfnOutput(this, 'ClusterName', { value: cluster.clusterName, description: 'ECS Cluster Name' });
         new cdk.CfnOutput(this, 'ServiceName', { value: service.serviceName, description: 'ECS Service Name' });
         new cdk.CfnOutput(this, 'TaskDefinitionName', { value: taskDefinition.family, description: 'Task Definition Name' });

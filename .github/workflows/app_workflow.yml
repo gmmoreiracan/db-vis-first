@@ -3,7 +3,7 @@ name: Build and Deploy Docker Image to ECS
 on:
   push:
     paths:
-      - '/app/**'   # Trigger this workflow when changes are made to files in the `app` directory.
+      - 'app/**'   # Trigger this workflow when changes are made to files in the `app` directory.
       - '.github/workflows/app_workflow.yml'  # Optional: trigger on workflow changes as well.
   workflow_dispatch:  # This allows you to trigger the action manually from GitHub UI.
 
