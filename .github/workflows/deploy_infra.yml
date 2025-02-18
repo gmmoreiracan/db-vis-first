@@ -3,9 +3,9 @@ name: Build and Deploy Docker Image to ECS
 on:
   push:
     paths:
-      - '/app/**'   # Trigger this workflow when changes are made to files in the `app` directory.
-      - '/app/Dockerfile'
-      - '.github/workflows/main.yml'  # Optional: trigger on workflow changes as well.
+      - '/lib/**'   # Trigger this workflow when changes are made to files in the `lib` directory.
+      - '/bin/**'   # Trigger this workflow when changes are made to files in the `bin` directory.
+      - '.github/workflows/deploy_infra.yml'  # Optional: trigger on workflow changes as well.
   workflow_dispatch:  # This allows you to trigger the action manually from GitHub UI.
 
 jobs:
@@ -25,7 +25,7 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ca-central-1  # Change the region to your desired AWS region
-
+          
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
@@ -43,7 +43,7 @@ jobs:
       # Step 3: Deploy CDK Stack (to extract the outputs)
       - name: Deploy CDK Stack
         run: |
-          npm install -g aws-cdk
+          cdk synth
           cdk deploy --require-approval never
 
       # Step 4: Capture CDK Outputs (ECR Repo, Cluster Name, Task Definition Name)
@@ -58,24 +58,3 @@ jobs:
           echo "::set-output name=cluster_name::$CLUSTER_NAME"
           echo "::set-output name=task_definition_name::$TASK_DEFINITION_NAME"
           echo "::set-output name=container_name::$CONTAINER_NAME"
-
-      # Step 5: Log in to Amazon ECR
-      - name: Log in to Amazon ECR
-        run: |
-          aws ecr get-login-password --region ca-centra-1 | docker login --username AWS --password-stdin ${{ steps.cdk_outputs.outputs.ecr_uri }}
-
-      # Step 6: Build Docker image
-      - name: Build Docker image
-        run: |
-          docker build --platform linux/amd64 -t ${{ steps.cdk_outputs.outputs.ecr_uri }}:latest .
-
-      # Step 7: Push Docker image to ECR
-      - name: Push Docker image to ECR
-        run: |
-          docker push ${{ steps.cdk_outputs.outputs.ecr_uri }}:latest
-
-      # Step 8: Update ECS Service
-      - name: Update ECS service
-        run: |
-          # Update ECS Task Definition
-          aws ecs update-service --cluster ${{ steps.cdk_outputs.outputs.cluster_name }} --service ${{ steps.cdk_outputs.outputs.task_definition_name }} --task-definition ${{ steps.cdk_outputs.outputs.task_definition_name }} --desired-count 1
