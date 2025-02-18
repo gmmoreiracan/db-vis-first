@@ -48,6 +48,7 @@ jobs:
         env:
           ECR_URI: ${{ steps.cdk_outputs.outputs.ecr_uri }}
           IMAGE_TAG: ${{ github.sha }}
+        working-directory: app
         run: |
           # Build a docker container and
           # push it to ECR so that it can
