@@ -33,8 +33,8 @@ jobs:
           CLUSTER_NAME=$(aws cloudformation describe-stacks --query "Stacks[0].Outputs[?OutputKey=='ClusterName'].OutputValue" --output text)
           TASK_DEFINITION_NAME=$(aws cloudformation describe-stacks --query "Stacks[0].Outputs[?OutputKey=='TaskDefinitionName'].OutputValue" --output text)
           TASK_DEFINITION_ARN=$(aws cloudformation describe-stacks --query "Stacks[0].Outputs[?OutputKey=='TaskDefinitionArn'].OutputValue" --output text)
-          SERVICE_NAME=$(aws cloudformation describe-stacks --query "Stacks[0].Outputs[?OutputKey=='ContainerName'].OutputValue" --output text)
-          CONTAINER_NAME=$(aws cloudformation describe-stacks --query "Stacks[0].Outputs[?OutputKey=='ServiceName'].OutputValue" --output text)
+          SERVICE_NAME=$(aws cloudformation describe-stacks --query "Stacks[0].Outputs[?OutputKey=='ServiceName'].OutputValue" --output text)
+          CONTAINER_NAME=$(aws cloudformation describe-stacks --query "Stacks[0].Outputs[?OutputKey=='ContainerName'].OutputValue" --output text)
           echo "ECR_URI=$ECR_URI" >> "$GITHUB_OUTPUT"
           echo "CLUSTER_NAME=$CLUSTER_NAME" >> "$GITHUB_OUTPUT"
           echo "SERVICE_NAME=$SERVICE_NAME" >> "$GITHUB_OUTPUT"
@@ -71,7 +71,7 @@ jobs:
         uses: aws-actions/amazon-ecs-render-task-definition@c804dfbdd57f713b6c079302a4c01db7017a36fc
         with:
           task-definition: task-definition.json
-          container-name: db_demo_container
+          container-name: ${{ steps.cdk_outputs.outputs.CONTAINER_NAME }}
           image: ${{ steps.build-image.outputs.image }}
 
       - name: Deploy Amazon ECS task definition
