@@ -14,7 +14,9 @@ jobs:
     steps:
       # Step 1: Check out the code
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Ensures full repo history
 
       # Step 2: Set up AWS CLI
       - name: Set up AWS CLI
@@ -34,6 +36,9 @@ jobs:
 
       - name: Install AWS CDK
         run: npm install -g aws-cdk
+
+      - name: List project files
+        run: ls -R
 
       # Step 3: Deploy CDK Stack (to extract the outputs)
       - name: Deploy CDK Stack
