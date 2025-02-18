@@ -27,10 +27,7 @@ export class MyEcsAppStack extends cdk.Stack {
         // Create an ECR Repository
         const repository = new ecr.Repository(this, 'MyEcrRepo', { repositoryName });
 
-        // Create an ECS Cluster
-        const cluster = new ecs.Cluster(this, 'MyCluster', { vpc, clusterName });
-
-        // Create a Docker Image Asset
+        // Create a Docker Image Asset (depends on repository)
         const asset = new ecr_assets.DockerImageAsset(this, 'MyNodeAppImage', {
             directory: path.join(__dirname, '../app')
         });
@@ -41,11 +38,18 @@ export class MyEcsAppStack extends cdk.Stack {
             cpu: 256
         });
 
+        // Add explicit dependency to ensure repository is created first
+        taskDefinition.node.addDependency(repository);
+
+        // Add a container to the task definition
         const container = taskDefinition.addContainer(containerName, {
-            image: ecs.ContainerImage.fromEcrRepository(repository),
+            image: ecs.ContainerImage.fromDockerImageAsset(asset),
             memoryLimitMiB: 512,
             logging: ecs.LogDrivers.awsLogs({ streamPrefix: 'ecs' })
         });
+
+        // Create an ECS Cluster
+        const cluster = new ecs.Cluster(this, 'MyCluster', { vpc, clusterName });
 
         container.addPortMappings({ containerPort: 80 });
 
