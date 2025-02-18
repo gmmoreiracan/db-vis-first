@@ -60,8 +60,10 @@ jobs:
           echo "image=$ECR_URI:$IMAGE_TAG" >> $GITHUB_OUTPUT
       
       - name: Download task definition
+        env:
+          TASK_DEFINITION_FAMILY: ${{ steps.cdk_outputs.outputs.TASK_DEFINITION_NAME }}
         run: |
-          aws ecs describe-task-definition --task-definition my-task-definition-family --query taskDefinition > task-definition.json
+          aws ecs describe-task-definition --task-definition $TASK_DEFINITION_FAMILY --query taskDefinition > task-definition.json
 
       - name: Fill in the new image ID in the Amazon ECS task definition
         id: task-def
