@@ -71,22 +71,19 @@ jobs:
         run: |
           echo "START_DATE=$(date -d '+30 minutes' --utc +'%Y-%m-%d %H:%M:%S')" >> $GITHUB_OUTPUT
           echo "END_DATE=$(date -d '+60 minutes' --utc +'%Y-%m-%d %H:%M:%S')" >> $GITHUB_OUTPUT
-
+      
       - name: ServiceNow Change
         uses: ServiceNow/servicenow-devops-change@v3.0.0
         with:
-          # Devops Integration Token
           devops-integration-token: ${{ secrets.SN_DEVOPS_TOKEN }}
-          # ServiceNow Instance URL
           instance-url: ${{ secrets.SN_INSTANCE_URL }}
-          # Orchestration Tool Id
           tool-id: ${{ secrets.SN_ORCHESTRATION_TOOL_ID }}
-          # GitHub Context
           context-github: ${{ toJSON(github) }}
-          # Display Name of the Job
           job-name: 'ServiceNow DevOps Change'
-          change-request: '{"attributes":{"requested_by":{"name": "System Administrator"},"assignment_group":{"name": "Application Development"},"priority": "2","comments": "Automated change criation","work_notes": "Update this to work_notes","start_date": "${{ steps.change_window.outputs.START_DATE }}","end_date": "${{ steps.change_window.outputs.END_DATE }}"}}'
-          # You can specify the requested_by attribute either with name or sys_id. Example: "requested_by":{"name": "Test User"} or "requested_by": "62826bf03710200044e0bfc8bcbe5df1"
-          # You can specify the assignment_group attribute either with name or sys_id. Example: "assignment_group":{"name": "Change Approval Team"} or "assignment_group": "5f721d93c0a8010e015533746de18bf9"
-          # start_date: This is the planned start date
-          # end_date: This is the planned end date
+          change-request: '{"setCloseCode":"true","autoCloseChange":true,"attributes":{"short_description":"Automated Software Deployment","description":"Automated Software Deployment.","assignment_group":"Application Development","implementation_plan":"Software update is tested and results can be found in Test Summaries Tab; When the change is approved the implementation happens automated by the CICD pipeline within the change planned start and end time window.","backout_plan":"When software fails in production, the previous software release will be re-deployed.","test_plan":"Testing if the software was successfully deployed","chg_model":"DevOps Simplified"}}'
+          interval: '100'
+          timeout: '3600'
+          changeCreationTimeOut: '3600'
+          abortOnChangeCreationFailure: true
+          abortOnChangeStepTimeout: true
+          deployment-gate: '{"environment":"deploymentgate","jobName":"Deploy"}'
