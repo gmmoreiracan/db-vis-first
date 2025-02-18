@@ -1,4 +1,4 @@
-name: Build and Deploy Docker Image to ECS
+name: Deploy CDK App
 
 on:
   push:

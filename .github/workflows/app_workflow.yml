@@ -35,11 +35,11 @@ jobs:
           TASK_DEFINITION_NAME=$(aws cloudformation describe-stacks --query "Stacks[0].Outputs[?OutputKey=='TaskDefinitionName'].OutputValue" --output text)
           TASK_DEFINITION_ARN=$(aws cloudformation describe-stacks --query "Stacks[0].Outputs[?OutputKey=='TaskDefinitionArn'].OutputValue" --output text)
           CONTAINER_NAME=$(aws cloudformation describe-stacks --query "Stacks[0].Outputs[?OutputKey=='ContainerName'].OutputValue" --output text)
-          echo "::set-output name=ecr_uri::$ECR_URI"
-          echo "::set-output name=cluster_name::$CLUSTER_NAME"
-          echo "::set-output name=task_definition_name::$TASK_DEFINITION_NAME"
-          echo "::set-output name=task_definition_arn::$TASK_DEFINITION_ARN"
-          echo "::set-output name=container_name::$CONTAINER_NAME"
+          echo "ECR_URI=$ECR_URI" >> "$GITHUB_OUTPUT"
+          echo "CLUSTER_NAME=$CLUSTER_NAME" >> "$GITHUB_OUTPUT"
+          echo "TASK_DEFINITION_NAME=$TASK_DEFINITION_NAME" >> "$GITHUB_OUTPUT"
+          echo "TASK_DEFINITION_ARN=$TASK_DEFINITION_ARN" >> "$GITHUB_OUTPUT"
+          echo "CONTAINER_NAME=$CONTAINER_NAME" >> "$GITHUB_OUTPUT"
 
       - name: Login to Amazon ECR
         id: login-ecr
@@ -63,14 +63,14 @@ jobs:
         id: task-def
         uses: aws-actions/amazon-ecs-render-task-definition@c804dfbdd57f713b6c079302a4c01db7017a36fc
         with:
-          task-definition: ${{ steps.cdk_outputs.outputs.task_definition_arn }}
-          container-name: ${{ steps.cdk_outputs.outputs.container_name }}
+          task-definition: ${{ steps.cdk_outputs.outputs.TASK_DEFINITION_ARN }}
+          container-name: ${{ steps.cdk_outputs.outputs.CONTAINER_NAME }}
           image: ${{ steps.build-image.outputs.image }}
 
       - name: Deploy Amazon ECS task definition
         uses: aws-actions/amazon-ecs-deploy-task-definition@df9643053eda01f169e64a0e60233aacca83799a
         with:
-          task-definition: ${{ steps.cdk_outputs.outputs.task_definition_arn }}
+          task-definition: ${{ steps.cdk_outputs.outputs.TASK_DEFINITION_ARN }}
           service: ${{ env.ECS_SERVICE }}
-          cluster: ${{ steps.cdk_outputs.outputs.cluster_name }}
+          cluster: ${{ steps.cdk_outputs.outputs.CLUSTER_NAME }}
           wait-for-service-stability: true
