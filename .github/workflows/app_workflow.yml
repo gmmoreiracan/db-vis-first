@@ -49,7 +49,7 @@ jobs:
       - name: Build, tag, and push image to Amazon ECR
         id: build-image
         env:
-          ECR_URI: ${{ steps.cdk_outputs.outputs.ecr_uri }}
+          ECR_URI: ${{ steps.cdk_outputs.outputs.ECR_URI }}
           IMAGE_TAG: ${{ github.sha }}
         working-directory: app
         run: |

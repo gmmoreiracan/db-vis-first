@@ -41,9 +41,8 @@ export class MyEcsAppStack extends cdk.Stack {
             cpu: 256
         });
 
-        // Add a container to the task definition
         const container = taskDefinition.addContainer(containerName, {
-            image: ecs.ContainerImage.fromDockerImageAsset(asset),
+            image: ecs.ContainerImage.fromEcrRepository(repository),
             memoryLimitMiB: 512,
             logging: ecs.LogDrivers.awsLogs({ streamPrefix: 'ecs' })
         });
