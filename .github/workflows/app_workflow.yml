@@ -61,7 +61,7 @@ jobs:
         id: task-def
         uses: aws-actions/amazon-ecs-render-task-definition@c804dfbdd57f713b6c079302a4c01db7017a36fc
         with:
-          task-definition: ${{ steps.cdk_outputs.outputs.ecr_uri }}
+          task-definition: ${{ steps.cdk_outputs.outputs.task_definition_name }}
           container-name: ${{ steps.cdk_outputs.outputs.container_name }}
           image: ${{ steps.build-image.outputs.image }}
 
