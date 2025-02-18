@@ -24,9 +24,6 @@ export class MyEcsAppStack extends cdk.Stack {
         // Create a VPC
         const vpc = new ec2.Vpc(this, 'MyVpc', { maxAzs: 2 });
 
-        // Create an ECR Repository
-        const repository = new ecr.Repository(this, 'MyEcrRepo', { repositoryName });
-
         // Create a Docker Image Asset (depends on repository)
         const asset = new ecr_assets.DockerImageAsset(this, 'MyNodeAppImage', {
             directory: path.join(__dirname, '../app')
@@ -37,9 +34,6 @@ export class MyEcsAppStack extends cdk.Stack {
             memoryLimitMiB: 512,
             cpu: 256
         });
-
-        // Add explicit dependency to ensure repository is created first
-        taskDefinition.node.addDependency(repository);
 
         // Add a container to the task definition
         const container = taskDefinition.addContainer(containerName, {
@@ -53,14 +47,6 @@ export class MyEcsAppStack extends cdk.Stack {
 
         container.addPortMappings({ containerPort: 80 });
 
-        // // Create a Fargate Service with a Load Balancer
-        // new ecs_patterns.ApplicationLoadBalancedFargateService(this, 'MyFargateService', {
-        //     cluster,
-        //     taskDefinition,
-        //     desiredCount: 1,
-        //     publicLoadBalancer: true
-        // });
-        
         // Create a Fargate service
         const service = new ecs.FargateService(this, 'MyFargateService', {
             cluster: cluster,
@@ -94,8 +80,9 @@ export class MyEcsAppStack extends cdk.Stack {
         new cdk.CfnOutput(this, 'TaskDefinitionArn', {
             value: taskDefinition.taskDefinitionArn,
             description: 'ECS Task Definition ARN',
-          });
-        new cdk.CfnOutput(this, 'EcrRepoUri', { value: repository.repositoryUri, description: 'ECR Repository URI' });
+        });
+        //new cdk.CfnOutput(this, 'EcrRepoUri', { value: repository.repositoryUri, description: 'ECR Repository URI' });
+        new cdk.CfnOutput(this, 'EcrRepoUri', { value: asset.imageUri, description: 'ECR Repository URI' });
         new cdk.CfnOutput(this, 'ClusterName', { value: cluster.clusterName, description: 'ECS Cluster Name' });
         new cdk.CfnOutput(this, 'ServiceName', { value: service.serviceName, description: 'ECS Service Name' });
         new cdk.CfnOutput(this, 'TaskDefinitionName', { value: taskDefinition.family, description: 'Task Definition Name' });
