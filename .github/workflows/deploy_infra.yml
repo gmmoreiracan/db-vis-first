@@ -44,7 +44,7 @@ jobs:
       - name: Deploy CDK Stack
         run: |
           cdk synth
-          cdk deploy --require-approval never
+          cdk deploy MyEcsAppStack --require-approval never
 
       # Step 4: Capture CDK Outputs (ECR Repo, Cluster Name, Task Definition Name)
       - name: Capture CDK Stack Outputs
