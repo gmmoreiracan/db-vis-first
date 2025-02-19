@@ -29,13 +29,13 @@ jobs:
       - name: Capture CDK Stack Outputs
         id: cdk_outputs
         run: |
-          REGISTRY_URI=$(aws cloudformation describe-stacks --query "Stacks[0].Outputs[?OutputKey=='EcrRepoUri'].OutputValue" --output text)
-          REPO_NAME=$(aws cloudformation describe-stacks --query "Stacks[0].Outputs[?OutputKey=='EcrRepoName'].OutputValue" --output text)
-          CLUSTER_NAME=$(aws cloudformation describe-stacks --query "Stacks[0].Outputs[?OutputKey=='ClusterName'].OutputValue" --output text)
-          TASK_DEFINITION_NAME=$(aws cloudformation describe-stacks --query "Stacks[0].Outputs[?OutputKey=='TaskDefinitionName'].OutputValue" --output text)
-          TASK_DEFINITION_ARN=$(aws cloudformation describe-stacks --query "Stacks[0].Outputs[?OutputKey=='TaskDefinitionArn'].OutputValue" --output text)
-          SERVICE_NAME=$(aws cloudformation describe-stacks --query "Stacks[0].Outputs[?OutputKey=='ServiceName'].OutputValue" --output text)
-          CONTAINER_NAME=$(aws cloudformation describe-stacks --query "Stacks[0].Outputs[?OutputKey=='ContainerName'].OutputValue" --output text)
+          REGISTRY_URI=$(aws cloudformation describe-stacks --stack-name "MyEcsAppStack" --query "Stacks[0].Outputs[?OutputKey=='EcrRepoUri'].OutputValue" --output text)
+          REPO_NAME=$(aws cloudformation describe-stacks --stack-name "MyEcsAppStack" --query "Stacks[0].Outputs[?OutputKey=='EcrRepoName'].OutputValue" --output text)
+          CLUSTER_NAME=$(aws cloudformation describe-stacks --stack-name "MyEcsAppStack" --query "Stacks[0].Outputs[?OutputKey=='ClusterName'].OutputValue" --output text)
+          TASK_DEFINITION_NAME=$(aws cloudformation describe-stacks --stack-name "MyEcsAppStack" --query "Stacks[0].Outputs[?OutputKey=='TaskDefinitionName'].OutputValue" --output text)
+          TASK_DEFINITION_ARN=$(aws cloudformation describe-stacks --stack-name "MyEcsAppStack" --query "Stacks[0].Outputs[?OutputKey=='TaskDefinitionArn'].OutputValue" --output text)
+          SERVICE_NAME=$(aws cloudformation describe-stacks --stack-name "MyEcsAppStack" --query "Stacks[0].Outputs[?OutputKey=='ServiceName'].OutputValue" --output text)
+          CONTAINER_NAME=$(aws cloudformation describe-stacks --stack-name "MyEcsAppStack" --query "Stacks[0].Outputs[?OutputKey=='ContainerName'].OutputValue" --output text)
           echo "REGISTRY_URI=$REGISTRY_URI" >> "$GITHUB_OUTPUT"
           echo "REPO_NAME=$REPO_NAME" >> "$GITHUB_OUTPUT"
           echo "ECR_URI=$REGISTRY_URI/$REPO_NAME" >> "$GITHUB_OUTPUT"
@@ -51,7 +51,7 @@ jobs:
 
       - name: Build, tag, and push image to Amazon ECR
         id: build-image
-        
+
         env:
           ECR_URI: ${{ steps.cdk_outputs.outputs.ECR_URI }}
           IMAGE_TAG: ${{ github.sha }}
